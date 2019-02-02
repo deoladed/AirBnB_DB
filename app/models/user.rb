@@ -4,18 +4,15 @@ class User < ApplicationRecord
   	uniqueness: true,
   	format: { with: /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/, message: "email adress please" }
   validates :phone_number, presence: true
-  has_many :reservations #as_user
-  has_many :listings #as_admin
+  has_many :reservations, dependent: :destroy #as_guest classname reservations
+  has_many :listings, dependent: :destroy #as_admin classneme listing
+
 
   def is_admin?
   	self.listings.count > 0
   end
 
   def is_guest?
-  	self.reservations
+  	self.reservations.empty? ? false : self.reservations.each {|resa| return true unless resa.is_over?}
   end
 end
-
-# if self.logement.user = self => is admin
-
-# 	Dans resa : who's is_guest

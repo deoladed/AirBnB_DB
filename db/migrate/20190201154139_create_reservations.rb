@@ -4,7 +4,8 @@ class CreateReservations < ActiveRecord::Migration[5.2]
       t.datetime :start_date
       t.datetime :end_date
       t.belongs_to :listing, foreign_key: true
-      t.belongs_to :user, foreign_key: true
+      # t.belongs_to :user, foreign_key: true
+      t.references :guest, index: true
 
       t.timestamps
     end

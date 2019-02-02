@@ -10,14 +10,30 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_01_154139) do
+ActiveRecord::Schema.define(version: 2019_02_01_190357) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "calendars", force: :cascade do |t|
+    t.bigint "day_id"
+    t.bigint "reservation_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["day_id"], name: "index_calendars_on_day_id"
+    t.index ["reservation_id"], name: "index_calendars_on_reservation_id"
+  end
+
   create_table "cities", force: :cascade do |t|
     t.string "name"
     t.string "zip"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "days", force: :cascade do |t|
+    t.integer "is_taken_by"
+    t.datetime "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -28,23 +44,23 @@ ActiveRecord::Schema.define(version: 2019_02_01_154139) do
     t.text "description"
     t.boolean "has_wifi"
     t.text "welcome_message"
-    t.bigint "user_id"
+    t.bigint "admin_id"
     t.bigint "city_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["admin_id"], name: "index_listings_on_admin_id"
     t.index ["city_id"], name: "index_listings_on_city_id"
-    t.index ["user_id"], name: "index_listings_on_user_id"
   end
 
   create_table "reservations", force: :cascade do |t|
     t.datetime "start_date"
     t.datetime "end_date"
     t.bigint "listing_id"
-    t.bigint "user_id"
+    t.bigint "guest_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["guest_id"], name: "index_reservations_on_guest_id"
     t.index ["listing_id"], name: "index_reservations_on_listing_id"
-    t.index ["user_id"], name: "index_reservations_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -56,7 +72,5 @@ ActiveRecord::Schema.define(version: 2019_02_01_154139) do
   end
 
   add_foreign_key "listings", "cities"
-  add_foreign_key "listings", "users"
   add_foreign_key "reservations", "listings"
-  add_foreign_key "reservations", "users"
 end

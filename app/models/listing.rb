@@ -4,7 +4,8 @@ class Listing < ApplicationRecord
 	validates :description, presence: true, length: { minimum: 140 }
 	validates :welcome_message, presence: true
 
-	belongs_to :user
+	# belongs_to :user # ADMIN, calss_name User
+	belongs_to :admin, class_name: 'User'
 	belongs_to :city
 	has_many :reservations
 end
